@@ -1,554 +1,256 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js ie6" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->  <html class="no-js" lang="en"> <!--<![endif]-->
 <!--
-This is an effort from the Guardian Project. For more info about our open source security tools, please visit https://guardianproject.info/
-Thanks to Sam Vermette for the inspiration - http://samvermette.com/
-!-->    
-<html>
 
+This is an effort from the Guardian Project. For more info about our open
+source security tools, please visit https://guardianproject.info/
+
+Thanks to Sam Vermette for the inspiration - http://samvermette.com
+
+-->
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	
-	<title>Howto: Using Orbot for Anonymity and Circumvention on your Android</title>
-	<meta name="description" content="Painless tutorial on how use Orbot and Orweb for mobile anonymity and security on Android.">
-	<meta name="viewport" id="viewport" content="maximum-scale=1" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
+    <title>Howto: Using Orbot for Anonymity and Circumvention on your Android</title>
 
-<style>
-	* {	
-		font-weight: normal;
-		-webkit-font-smoothing: antialiased;
-	}
+    <meta name="description" content="Howto: Using Orbot for Anonymity and Circumvention on your Android">
+    <meta name="author" content="The Guardian Project">
+    <meta name="viewport" content="width=1024, user-scalable=no">
 
-	a {
-		color: #000;
-	}
-	
-	a:hover {
-		color: black;
-		background: limegreen;
-	}
+    <!-- Core and extension CSS files -->
+    <link rel="stylesheet" href="../deck.js/core/deck.core.css">
+    <link rel="stylesheet" href="../deck.js/extensions/goto/deck.goto.css">
+    <link rel="stylesheet" href="../deck.js/extensions/menu/deck.menu.css">
+    <link rel="stylesheet" href="../deck.js/extensions/navigation/deck.navigation.css">
+    <link rel="stylesheet" href="../deck.js/extensions/status/deck.status.css">
+    <link rel="stylesheet" href="../deck.js/extensions/hash/deck.hash.css">
 
-	body, html {
-		margin: 0;
-		padding: 0;
-		width: 100%;
-		height: 100%;
-	}
+    <!-- Theme CSS files (menu swaps these out) -->
+    <link rel="stylesheet" id="style-theme-link" href="../deck.js/tutorial/guardian.css">
+    <link rel="stylesheet" id="transition-theme-link" href="../deck.js/themes/transition/fade.css">
+    <link rel="stylesheet" href="../deck.js/tutorial/tutorial.css">
+    <link rel="stylesheet" href="../deck.js/tutorial/common.css">
 
-	#window {
-		background: url('galaxy.png') no-repeat center bottom;
-		overflow: hidden;
-		position: absolute;
-		top: 200px;
-		width: 401px;
-		height: 601px;
-		left: 70%;
-		margin: 0 0 0 -507px;
-		opacity: 0;
-		-webkit-transform: scale(0.8);
-		-moz-transform: scale(0.8);
-		-webkit-transition: all 0.3s ease-out;
-		-moz-transition: all 0.3s ease-out;
-	}
-	
-	#window.visible {
-		opacity: 1;
-		-webkit-transform: scale(1);
-		-moz-transform: scale(1);
-	}
-	
-	#cursor {
-		background: url('cursor.png') no-repeat 0 0;
-		width: 84px;
-		height: 121px;
-		position: absolute;
-		bottom: -200px;
-		right: 0;
-		-webkit-transition: all 0.5s ease-out;
-		-moz-transition: all 0.5s ease-out;
-	}
-	
-	#cursor.away {
-		bottom: -200px;
-		right: 200px;
-		-webkit-transition: none;
-		-moz-transition: none;
-	}
-	
-	#cursor.moved {
-		bottom: -200px;
-		right: 200px;
-		-webkit-transition: all 0.5s ease-out;
-		-moz-transition: all 0.5s ease-out;
-	}
-	
-	#cursor.device {
-		top: 50%;
-	    left: 50%;
-    	margin-left:-5px;
-	    margin-top:-5px; 
-	}
-	
-	#cursor.device_clicked {
-		top: 50%;
-	    left: 50%;
-    	margin-left:-5px;
-	    margin-top:-10px; 
-		-webkit-transition: none;
-		-moz-transition: none;
-	}
-	
-	#cursor.device_released {
-		top: 50%;
-	    left: 50%;
-    	margin-left:-5px;
-	    margin-top:-5px; 
-		-webkit-transition: none;
-		-moz-transition: none;
-	}
-	
-	
-	#device1, #devicef1, #devicef2, #devicef3, #devicef4, #devicef5, #device2, #device3, #device4, #device5, #device6, #device7, #device7a, #device7b, #device7c, #device7d, #device7e, #device8, #device8a, #device8b, #device8c, #device9, #device10, #device11, #device11a, #device12, #device13, #device14, #device15, #device16, #device17, #device17a, #device18, #device19, #device20 {
-		width: 401px;
-		height: 601px;
-		position: absolute;
-		visibility: hidden;
-	}
-	
-	#device1 {
-		background: url('galaxy1.png') no-repeat bottom;
-	}
-	#devicef1 {
-		background: url('galaxyf1.png') no-repeat bottom;
-	}
-	#devicef2 {
-		background: url('galaxyf2.png') no-repeat bottom;
-	}
-	#devicef3 {
-		background: url('galaxyf3.png') no-repeat bottom;
-	}
-	#devicef4 {
-		background: url('galaxyf4.png') no-repeat bottom;
-	}	
-	#devicef5 {
-		background: url('galaxyf4.png') no-repeat bottom;
-	}	
+    <!-- Custom CSS just for this page -->
+    <link rel="stylesheet" href="orbot.css">
 
-	#device2 {
-		background: url('galaxy2.png') no-repeat bottom;
-	}
-
-	#device3 {
-		background: url('galaxy3.png') no-repeat bottom;
-	}
-
-	#device4 {
-		background: url('galaxy4.png') no-repeat bottom;
-	}
-
-	#device5 {
-		background: url('galaxy5.png') no-repeat bottom;
-	}
-
-	#device6 {
-		background: url('galaxy6.png') no-repeat bottom;
-	}
-
-	#device7 {
-		background: url('galaxy7.png') no-repeat bottom;
-	}
-
-	#device8 {
-		background: url('galaxy8.png') no-repeat bottom;
-	}
-
-	#device9 {
-		background: url('galaxy9.png') no-repeat bottom;
-	}
-
-	#device10 {
-		background: url('galaxy10.png') no-repeat bottom;
-	}
-
-	#device11 {
-		background: url('galaxy11.png') no-repeat bottom;
-	}
-
-	#device12 {
-		background: url('galaxy12.png') no-repeat bottom;
-	}
-
-	#device13 {
-		background: url('galaxy13.png') no-repeat bottom;
-	}
-
-	#device14 {
-		background: url('galaxy14.png') no-repeat bottom;
-	}
-
-	#device15 {
-		background: url('galaxy15.png') no-repeat bottom;
-	}
-
-	#device16 {
-		background: url('galaxy16.png') no-repeat bottom;
-	}
-
-	#device17 {
-		background: url('galaxy17.png') no-repeat bottom;
-	}
-	
-	#device17a {
-		background: url('galaxy17a.png') no-repeat bottom;
-	}
-	
-	#device18 {
-		background: url('galaxy18.png') no-repeat bottom;
-	}
-
-	#device19 {
-		background: url('galaxy19.png') no-repeat bottom;
-	}
-
-	#device20 {
-		background: url('galaxy20.png') no-repeat bottom;
-	}
-
-	h1 {
-		font-family: "HelveticaNeue-Light", "Helvetica";
-		font-size: 30px;
-		margin: 20px 0 5px 0;
-		width: 800px;
-		position: absolute;
-		left: 50%;
-		top: 70px;
-		margin: 0 0 0 -400px;
-		text-align: center;
-	}
-	
-	h1 span {
-		font-family: "HelveticaNeue-Bold", "Helvetica Bold", "Helvetica";
-	}
-
-	h2 {
-		font-family: "HelveticaNeue-Light", "Helvetica";
-		font-size: 18px;
-		width: 600px;
-		position: absolute;
-		top: 120px;
-		left: 50%;
-		margin: 0 0 0 -300px;
-		color: rgb(120,120,120);
-		text-align: center;
-		opacity: 0;
-		-webkit-transition: all 0.3s ease-out;
-		-moz-transition: all 0.3s ease-out;
-	}
-	
-	h2.away {
-		top: 120px;
-		left: 50%;
-		opacity: 0;
-		-webkit-transition: none;
-		-moz-transition: none;
-	}
-	
-	h2.visible {
-		opacity: 2;
-		top: 140px;
-	}
-	
-	h2.hidden {
-		opacity: 0;
-		top: 260px;
-	}
-	
-	::-moz-selection {
-		color: black;
-		background: blue;
-	}
-	
-	::selection {
-		color: black;
-		background: yellow;
-	}
-	
-</style>
-
-
-<script type="text/javascript">
-	
-	function reset() {
-		document.getElementById('window').removeAttribute("class");
-		document.getElementById('device17a').setAttribute("style", "visibility:hidden");		
-		document.getElementById('device18').setAttribute("style", "visibility:hidden");																																								
-		document.getElementById('device9').setAttribute("style", "visibility:hidden");
-		document.getElementById('devicef5').setAttribute("style", "visibility:hidden");
-		document.getElementById('stepf5').setAttribute("class", "away");
-		document.getElementById('step11a').setAttribute("class", "away");
-		document.getElementById('step12').setAttribute("class", "away");
-	}
-	
-	function step0() {
-		document.getElementById('step0').setAttribute("class", "visible");
-	}
-	
-	function step1() {
-		reset();
-		document.getElementById('window').setAttribute("class", "visible");
-		document.getElementById('step0').setAttribute("class", "hidden");
-		document.getElementById('step1').setAttribute("class", "visible");
-		document.getElementById('cursor').setAttribute("class", "away");
-	}
-	
-	function stepf1() {
-		document.getElementById('step1').setAttribute("class", "hidden");
-		document.getElementById('stepf1').setAttribute("class", "visible");
-		document.getElementById('devicef1').setAttribute("style", "visibility:visible");
-	}
-	function stepf2() {
-		document.getElementById('stepf1').setAttribute("class", "hidden");
-		document.getElementById('stepf2').setAttribute("class", "visible");
-		document.getElementById('devicef1').setAttribute("style", "visibility:hidden");
-		document.getElementById('devicef2').setAttribute("style", "visibility:visible");
-	}		
-	function stepf3() {
-		document.getElementById('stepf2').setAttribute("class", "hidden");
-		document.getElementById('stepf3').setAttribute("class", "visible");
-		document.getElementById('devicef2').setAttribute("style", "visibility:hidden");
-		document.getElementById('devicef3').setAttribute("style", "visibility:visible");
-	}		
-	function stepf4() {
-		document.getElementById('stepf3').setAttribute("class", "hidden");
-		document.getElementById('stepf4').setAttribute("class", "visible");
-		document.getElementById('devicef3').setAttribute("style", "visibility:hidden");
-		document.getElementById('devicef4').setAttribute("style", "visibility:visible");
-	}		
-	function stepf5() {
-		document.getElementById('stepf4').setAttribute("class", "hidden");
-		document.getElementById('stepf5').setAttribute("class", "visible");
-		document.getElementById('devicef4').setAttribute("style", "visibility:hidden");
-		document.getElementById('devicef5').setAttribute("style", "visibility:visible");
-	}
-		
-	function step2() {
-		document.getElementById('step1').setAttribute("class", "hidden");
-		document.getElementById('stepf5').setAttribute("class", "hidden");
-		document.getElementById('step2').setAttribute("class", "visible");
-		document.getElementById('devicef5').setAttribute("style", "visibility:hidden");
-		document.getElementById('device1').setAttribute("style", "visibility:visible");
-	}
-	
-	function step3() {
-		document.getElementById('step2').setAttribute("class", "hidden");
-		document.getElementById('step3').setAttribute("class", "visible");
-		document.getElementById('device1').setAttribute("style", "visibility:hidden");
-		document.getElementById('device2').setAttribute("style", "visibility:visible");
-	}
-	
-	function step4() {
-		document.getElementById('step3').setAttribute("class", "hidden");
-		document.getElementById('step4').setAttribute("class", "visible");
-		document.getElementById('device2').setAttribute("style", "visibility:hidden");
-		document.getElementById('device3').setAttribute("style", "visibility:visible");
-	}
-	
-	function step5() {
-		document.getElementById('step4').setAttribute("class", "hidden");
-				document.getElementById('stepf5').setAttribute("class", "hidden");
-		document.getElementById('step5').setAttribute("class", "visible");
-				document.getElementById('devicef5').setAttribute("style", "visibility:hidden");
-		document.getElementById('device3').setAttribute("style", "visibility:hidden");
-		document.getElementById('device4').setAttribute("style", "visibility:visible");
-
-	}
-	
-	function step6() {
-		document.getElementById('step5').setAttribute("class", "hidden");
-		document.getElementById('step6').setAttribute("class", "visible");
-		document.getElementById('device4').setAttribute("style", "visibility:hidden");
-		document.getElementById('device5').setAttribute("style", "visibility:visible");
-	}
-	
-	function step7a() {
-		document.getElementById('step6').setAttribute("class", "hidden");
-		document.getElementById('step7a').setAttribute("class", "visible");
-		document.getElementById('device5').setAttribute("style", "visibility:hidden");
-		document.getElementById('device6').setAttribute("style", "visibility:visible");
-			setTimeout(step7b, 7500);
-	}	
-	
-	function step7b() {
-		document.getElementById('step7a').setAttribute("class", "hidden");
-		document.getElementById('step7b').setAttribute("class", "visible");
-		document.getElementById('device6').setAttribute("style", "visibility:hidden");
-		document.getElementById('device7').setAttribute("style", "visibility:visible");
-			setTimeout(step7c, 6500);
-	}	
-	
-	function step7c() {
-		document.getElementById('step7b').setAttribute("class", "hidden");
-		document.getElementById('step7c').setAttribute("class", "visible");
-		document.getElementById('device7').setAttribute("style", "visibility:hidden");
-		document.getElementById('device8').setAttribute("style", "visibility:visible");
-			setTimeout(step7d, 6500);
-	}	
-
-	function step7d() {
-		document.getElementById('step7c').setAttribute("class", "hidden");
-		document.getElementById('step7d').setAttribute("class", "visible");
-		document.getElementById('device8').setAttribute("style", "visibility:hidden");
-		document.getElementById('device9').setAttribute("style", "visibility:visible");
-			setTimeout(step7e, 7500);
-	}	
-	
-	function step7e() {
-		document.getElementById('step7d').setAttribute("class", "hidden");
-		document.getElementById('step7e').setAttribute("class", "visible");
-		document.getElementById('device9').setAttribute("style", "visibility:hidden");
-		document.getElementById('device10').setAttribute("style", "visibility:visible");
-			setTimeout(step8, 6500);
-	}	
-		
-	function step8() {
-		document.getElementById('step11a').setAttribute("class", "away");
-		document.getElementById('step7e').setAttribute("class", "hidden");
-		document.getElementById('step8').setAttribute("class", "visible");
-		document.getElementById('device17a').setAttribute("style", "visibility:hidden");
-		document.getElementById('device10').setAttribute("style", "visibility:hidden");
-		document.getElementById('device11').setAttribute("style", "visibility:visible");
-	}	
-	function step8a() {
-		document.getElementById('cursor').setAttribute("class", "away");
-		document.getElementById('cursor').setAttribute("class", "device");
-			setTimeout(step8b, 500);
-	}
-	function step8b() {
-		document.getElementById('cursor').setAttribute("class", "device_clicked");
-			setTimeout(step8c, 500);
-	}
-	function step8c() {
-		document.getElementById('cursor').setAttribute("class", "device_released");
-		document.getElementById('step8').setAttribute("class", "hidden");
-		document.getElementById('step8a').setAttribute("class", "visible");
-		document.getElementById('device11').setAttribute("style", "visibility:hidden");
-		document.getElementById('device12').setAttribute("style", "visibility:visible");
-			setTimeout(step8d, 3000);
-	}		
-	function step8d() {
-				document.getElementById('cursor').setAttribute("class", "moved");
-		document.getElementById('step8a').setAttribute("class", "hidden");
-		document.getElementById('step8b').setAttribute("class", "visible");
-		document.getElementById('device12').setAttribute("style", "visibility:hidden");
-		document.getElementById('device13').setAttribute("style", "visibility:visible");
-			setTimeout(step8e, 4000);
-	}	
-	function step8e() {
-		document.getElementById('step8b').setAttribute("class", "hidden");
-		document.getElementById('step8c').setAttribute("class", "visible");
-		document.getElementById('device13').setAttribute("style", "visibility:hidden");
-		document.getElementById('device14').setAttribute("style", "visibility:visible");
-			setTimeout(step9, 4000);
-	}
-	function step9() {
-		document.getElementById('step8c').setAttribute("class", "hidden");
-		document.getElementById('step9').setAttribute("class", "visible");
-		document.getElementById('device14').setAttribute("style", "visibility:hidden");
-		document.getElementById('device15').setAttribute("style", "visibility:visible");
-	}
-	function step10() {
-		document.getElementById('step9').setAttribute("class", "hidden");
-		document.getElementById('step10').setAttribute("class", "visible");
-		document.getElementById('device15').setAttribute("style", "visibility:hidden");
-		document.getElementById('device16').setAttribute("style", "visibility:visible");
-	}
-	function step11() {
-		document.getElementById('step10').setAttribute("class", "hidden");
-		document.getElementById('step11').setAttribute("class", "visible");
-		document.getElementById('device16').setAttribute("style", "visibility:hidden");
-		document.getElementById('device17').setAttribute("style", "visibility:visible");
-	}
-	
-	function step11a() {
-		document.getElementById('step11').setAttribute("class", "hidden");
-		document.getElementById('step11a').setAttribute("class", "visible");
-		document.getElementById('device17').setAttribute("style", "visibility:hidden");
-		document.getElementById('device17a').setAttribute("style", "visibility:visible");
-		
-	}	
-	function step12() {
-		document.getElementById('step11').setAttribute("class", "hidden");
-		document.getElementById('step12').setAttribute("class", "visible");
-		document.getElementById('device17').setAttribute("style", "visibility:hidden");
-		document.getElementById('device17a').setAttribute("style", "visibility:hidden");
-		document.getElementById('device18').setAttribute("style", "visibility:visible");
-	}
-</script>
-
+    <script src="../deck.js/modernizr.custom.js"></script>
 </head>
 
-<body onload="setTimeout(step0, 0);">
+<body class="tutorial">
 
+<header>
+    <nav>
+        <h1>So you want to escape censorship using an Android?</h1>
+    </nav>
+</header>
 
-<h1>So you want to escape censorship using an Android?</h1>
+<article class="deck-container">
 
-<h2 id="stepf5">Then click on <i>Orweb</i> to install it's partner web browser.<br><a href="javascript:step5()">Got it.</a></h2>
-<h2 id="stepf4">Go back to the main screen and you should see the Guardian Project apps. Click on <i>Orbot</i> to install. <a href="javascript:stepf5()">Got it.</a></h2>
-<h2 id="stepf3">Enter: <i>https://guardianproject.info/repo/</i> (don't forget the s!) <br><a href="javascript:stepf4()">Done. Where are the apps?</a></h2>
-<h2 id="stepf2">Run the app and navigate over to Menu > Manage Repos > New Repository <a href="javascript:stepf3()">Cool. What do I enter?</a></h2>
-<h2 id="stepf1">There's an alternative app store. Install <i>F-droid</i> by entering <br><i>https://f-droid.org/FDroid.apk</i> into a mobile browser. <a href="javascript:stepf2()">Done. Next?</a></h2>
-<h2 id="step12">You're awesome! Type in any website to browse it anonymously. <a href="javascript:step1()">Play again?</a> <br>· For more info, visit our site: <a href="http://guardianproject.info" target="_blank">The Guardian Project</a> · </h2>
-<h2 id="step11a">Your configuration is wrong. <a href="javascript:step8()">Restart <i>Orbot</i> and try again using <i>Orweb v2</i>.</a></h2>
-<h2 id="step11">11. It pulls up <i>check.torproject.org</i> to confirm we're surfing anonymously.<br><a href="javascript:step12()">I see <i>congrats</i>.</a> / <a href="javascript:step11a()">I don't see <i>congrats</i>.</a></h2>
-<h2 id="step10">10. Press the globe icon to pull up the web browser that you downloaded. <a href="javascript:step11()">Opening <i>Orweb v2</i>!</a></h2>
-<h2 id="step9">9. Let's confirm that we can now avoid the censors. <a href="javascript:step10()">Ok, how?</a></h2>
-<h2 id="step8c"><i>Orbot</i> turns <SPAN style="BACKGROUND-COLOR: limegreen">green</SPAN> when it's connected to <i>Tor</i>.</h2>
-<h2 id="step8b"><i>Orbot</i> becomes <SPAN style="BACKGROUND-COLOR: yellow">yellow</SPAN> as it's connecting...</h2>
-<h2 id="step8a"><i>Orbot</i> starts <SPAN style="BACKGROUND-COLOR: silver">grey</SPAN>.</h2>
-<h2 id="step8">8. Now we long press the power button to get started. <a href="javascript:step8a()">Pressing!</a></h2>
-<h2 id="step7e">Security is a two-way street. Make sure your friends are secure too.</h2>
-<h2 id="step7d">Otherwise you can use cool apps that have a proxy feature, <br>like these ones, <i>Twitter</i>, and others.</h2>
-<h2 id="step7c">If your phone is jailbroken/rooted then you can choose <br> to route all app traffic over <i>Tor</i>.</h2>
-<h2 id="step7b">Is it really secure? We break it down.</h2>
-<h2 id="step7a">We'll tell you about our project and onion routing via <i>Tor</i>.</h2>
-<h2 id="step6">6. Choose your language and get started. <a href="javascript:step7a()">Let's go with English.</a></h2>
-<h2 id="step5">5. Open <i>Orbot</i>. <a href="javascript:step6()">Done.</a></h2>
-<h2 id="step4">4. Get our sister app, <i>Orweb</i> for anonymous web browsing. <br><a href="javascript:step5()">Hey look, it's suggested!</a></h2>
-<h2 id="step3">3. Review the permissions. Then, maybe, accept them. <a href="javascript:step4()">OK, I trust you.</a></h2>
-<h2 id="step2">2. Search for <i>Orbot</i>. <a href="javascript:step3()">Got it.</a></h2>
-<h2 id="step1">1. Open the Google Play Store. <a href="javascript:step2()">Easy. Next?</a> <br><a href="javascript:stepf1()">It's blocked. Help!</a></h2>
-<h2 id="step0">Yes! <a href="javascript:step1()">How do I get	 a tool to surf freely and anonymously?</a></h2>
+    <div id="outside">
+        <div id="instructions">
 
-<div id="window">
-	<div id="device1"></div>
-	<div id="devicef1"></div>
-	<div id="devicef2"></div>
-	<div id="devicef3"></div>
-	<div id="devicef4"></div>
-	<div id="devicef5"></div>
-	<div id="device2"></div>
-	<div id="device3"></div>
-	<div id="device4"></div>
-	<div id="device5"></div>
-	<div id="device6"></div>
-	<div id="device7"></div>
-	<div id="device8"></div>
-	<div id="device9"></div>
-	<div id="device10"></div>
-	<div id="device11"></div>
-	<div id="device12"></div>
-	<div id="device13"></div>	
-	<div id="device14"></div>
-	<div id="device15"></div>
-	<div id="device16"></div>
-	<div id="device17"></div>
-	<div id="device17a"></div>
-	<div id="device18"></div>
-	<div id="device19"></div>
-	<div id="device20"></div>
-	<div id="cursor"></div>
-</div>
+            <section class="slide" id="00-begin">
+                <h2>Yes!</h2>
+                <p><a href="#01-market">How do I get a tool to surf freely and anonymously?</a></p>
+            </section>
 
+            <section class="slide" id="01-market">
+                <p>1. Open the Google Play Store.</p>
+                <p><a href="#02-search">Easy. Next?</a></p>
+                <p><a href="#01a-fdroid">It's blocked. Help!</a></p>
+
+                <!--- this is a sub section that takes a short detour -->
+                <section class="slide" id="01a-fdroid">
+                    <p>There's an alternative app store. Install <i>F-droid</i> by entering this into a mobile browser: </p>
+                    <p><code>https://f-droid.org/FDroid.apk</code></p>
+                    <p><a href="01b-install"></a>Done. Next?</p>
+                </section>
+
+            </section>
+
+            <section class="slide" id="02-search">
+                <p>2. Search for Orbot.</p>
+                <p><a href="#03-perms">Got it.</a></p>
+            </section>
+
+            <section class="slide" id="03-perms">
+                <p>3. Review the permissions. Then, maybe, accept them.</p>
+                <p><a href="#04-orweb">OK, I trust you.</a></p>
+            </section>
+
+            <section class="slide" id="04-orweb">
+                <p>4. Get our sister app, Orweb for anonymous web browsing.</p>
+                <p><a href="#05-open-orbot">Hey look, it's suggested!</a></p>
+            </section>
+
+            <section class="slide" id="05-open-orbot">
+                <p>5. Open <i>Orbot</i></p>
+                <p><a href="#06-lang">Done.</a></p>
+            </section>
+
+            <section class="slide" id="06-lang">
+                <p>6. Choose your language and get started.</p>
+                <p><a href="#06a-tor">Let's go with English.</a></p>
+            </section>
+
+            <section class="slide" id="06a-tor">
+                <p>We'll tell you about our project and onion routing via <i>Tor</i>.</p>
+                <p><a href="#06b-secure">Ok.</a></p>
+            </section>
+
+            <section class="slide" id="06b-secure">
+                <p>Is it really secure? We break it down.</p>
+                <p><a href="#06c-root">Ok.</a></p>
+            </section>
+
+            <section class="slide" id="06c-root">
+                <p>If your phone is jailbroken/rooted then you can choose to route all app traffic over <i>Tor</i>.</p>
+                <p><a href="#06d-proxyapps">Ok.</a></p>
+            </section>
+
+            <section class="slide" id="06d-proxyapps">
+                <p>Otherwise you can use cool apps that have a proxy feature, like these ones, <i>Twitter</i>, and others.</p>
+                <p><a href="#06e-friends">What else?</a></p>
+            </section>
+
+            <section class="slide" id="06e-friends">
+                <p>Security is a two-way street. Make sure your friends are secure too.</p>
+                <p><a href="#07-press">Got it.</a></p>
+            </section>
+
+            <section class="slide" id="07-press">
+                <p>7. Now we long press the power button to connect to Tor</p>
+                <p><a href="#slide-starting">Pressing!</a></p>
+            </section>
+
+            <p class="slide" id="slide-starting"><i>Orbot</i> starts <span style="background-color: silver">grey</span>.</p>
+            <p class="slide" id="07b-yellow" data-duration="3000"><i>Orbot</i> becomes <span style="background-color: yellow">yellow</span> as it's connecting...</p>
+            <p class="slide" id="07c-yellow2" data-duration="4000">Don't worry, this could take a minute or two...</p>
+
+            <section class="slide" id="07d-green">
+                <p><i>Orbot</i> turns <span style="background-color: limegreen">green</span> when it's connected to <i>Tor</i></p>
+                <p><a href="#08-confirm">Cool! Now what?</a></p>
+            </section>
+
+            <section class="slide" id="08-confirm">
+                <p>8. Let's confirm that we can now avoid the censors.</p>
+                <p><a href="#09-globe">Ok, how?</a></p>
+            </section>
+
+            <section class="slide" id="09-globe">
+                <p>9. Press the globe icon to pull up the web browser that you downloaded.</p>
+                <p><a href="#10-orweb">Opening <i>Orweb v2</i>!</a></p>
+            </section>
+
+            <section class="slide" id="10-orweb">
+                <p>10. It pulls up <i>check.torproject.org</i> to confirm we're surfing anonymously.</p>
+                <p><a href="#slide-done">I see the "Congratulations" message</a></p>
+                <p><a href="#"></a>I don't see it.</p>
+            </section>
+
+            <section class="slide" id="slide-done">
+                <p>You're awesome! Type in any website to browse it anonymously. </p>
+                <p><a href="#00-begin">Play again.</a></p>
+                <p>For more information visit <a href="https://guardianproject.info">The Guardian Project</a></p>
+            </section>
+
+            <!-- blank slide
+            <section class="slide" id="">
+                <p></p>
+                <p><a href="#"></a></p>
+            </section>
+            -->
+
+        </div>
+
+        <div id="window">
+            <span class="away" id="cursor"></span>
+            <img id="screenshot" src="" />
+        </div>
+
+    </div>
+
+    <!---
+    <a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
+    <a href="#" class="deck-next-link" title="Next">&#8594;</a>
+
+    <p class="deck-status">
+        <span class="deck-status-current"></span>
+        /
+        <span class="deck-status-total"></span>
+    </p>
+--->
+    <form action="." method="get" class="goto-form">
+        <label for="goto-slide">Go to slide:</label>
+        <input type="text" name="slidenum" id="goto-slide" list="goto-datalist">
+        <datalist id="goto-datalist"></datalist>
+        <input type="submit" value="Go">
+    </form>
+
+    <a href="." title="Permalink to this slide" class="deck-permalink">#</a>
+</article>
+
+<footer>
+    <p>Brought to you by <a href="http://guardianproject.info">The Guardian Project</a></p>
+</footer>
+
+<!-- TODO CDN jquery -->
+ <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+ <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+<!-- Deck Core and extensions -->
+<script src="../deck.js/core/deck.core.js"></script>
+<script src="../deck.js/extensions/hash/deck.hash.js"></script>
+<script src="../deck.js/extensions/menu/deck.menu.js"></script>
+<script src="../deck.js/extensions/goto/deck.goto.js"></script>
+<script src="../deck.js/extensions/status/deck.status.js"></script>
+<script src="../deck.js/extensions/navigation/deck.navigation.js"></script>
+<script src="../deck.js/extensions/step/deck.step.js"></script>
+<script src="../deck.js/extensions/events/deck.events.js"></script>
+<script src="../deck.js/extensions/automatic/deck.automatic.js"></script>
+
+<script src="../deck.js/tutorial/tutorial.js"></script>
+
+<script>
+
+// code specific to the orbot-orweb tutorial
+
+function animateClick() {
+    $("#cursor").show( "puff", {}, 500)
+    .switchClass( "away", "device", 1000)
+    .addClass( "device_clicked", 1000)
+    .switchClass( "device_clicked", "device_released", 1000, function() {
+        $.deck('next')
+    });
+    $("#cursor").hide( "puff", {}, 300)
+}
+
+function resetCursor() {
+        $("#cursor").hide().removeClass().addClass("away");
+}
+
+$(function() {
+    //hide the cursor from the beginning
+    $("#cursor").hide();
+
+    $("#slide-starting").bind('deck.lostCurrent', function(ev, direction) {
+
+        // hide the cursor if we're leaving the slide in a backward direction
+        if( direction == "reverse" ) {
+            resetCursor();
+        }
+    });
+
+    $("#slide-starting").bind('deck.becameCurrent', function(ev, direction) {
+            resetCursor();
+            animateClick();
+    });
+});
+</script>
 </body>
 </html>
