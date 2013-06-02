@@ -8,7 +8,8 @@ For more information on these apps, please visit https://guardianproject.info/
 
 ### Usage
 
-This tutorial depends on the deck.js framework with custom modifications made
+This tutorial depends on the [deck.js
+framework](http://imakewebthings.com/deck.js/) with custom modifications made
 by The Guardian Project.
 
 ```bash
